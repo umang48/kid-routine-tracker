@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\HabitTrackerController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -22,6 +23,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+// Our Habit Tracker Routes
+    Route::get('/tracker', [HabitTrackerController::class, 'index'])->name('tracker.index');
+    Route::post('/routines/{routine}/habits', [HabitTrackerController::class, 'storeHabit'])->name('habits.store');
+    Route::post('/habits/{habit}/complete', [HabitTrackerController::class, 'completeHabit'])->name('habits.complete');
+    });
 
 require __DIR__.'/auth.php';
