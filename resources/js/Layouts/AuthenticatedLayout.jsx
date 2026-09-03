@@ -30,6 +30,9 @@ export default function AuthenticatedLayout({ header, children }) {
                                 >
                                     Dashboard
                                 </NavLink>
+                                <NavLink href={route('tracker.index')} active={route().current('tracker.index')}>
+        Habit Tracker
+    </NavLink>
                             </div>
                         </div>
 
