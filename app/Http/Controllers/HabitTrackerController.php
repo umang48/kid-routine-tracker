@@ -75,4 +75,18 @@ class HabitTrackerController extends Controller
 
         return redirect()->back();
     }
+
+    // Store a newly created routine
+    public function storeRoutine(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $request->user()->routines()->create([
+            'name' => $request->name,
+        ]);
+
+        return redirect()->back();
+    }
 }

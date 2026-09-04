@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Habit extends Model
 {
-    protected $fillable = ['name', 'routine_id'];
+    protected $fillable = ['name', 'routine_id', 'user_id'];
 
     public function routine(): BelongsTo
     {

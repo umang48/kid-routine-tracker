@@ -33,6 +33,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/habits/{habit}', [HabitTrackerController::class, 'destroyHabit'])->name('habits.destroy');
     Route::delete('/routines/{routine}', [HabitTrackerController::class, 'destroyRoutine'])->name('routines.destroy');
    
+  
+    // Add this new route for creating routines
+    Route::post('/routines', [HabitTrackerController::class, 'storeRoutine'])->name('routines.store');
+    
+    Route::post('/routines/{routine}/habits', [HabitTrackerController::class, 'storeHabit'])->name('habits.store');
+
     });
 
 require __DIR__.'/auth.php';

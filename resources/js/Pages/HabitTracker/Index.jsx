@@ -4,11 +4,17 @@ import React, { useState } from 'react';
 import { Head, router, useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
+
+
 export default function HabitTracker({ auth, routines }) {
     // 1. New state to track which habit is currently being processed
     const [completingHabitId, setCompletingHabitId] = useState(null);
 
     const [activeRoutineId, setActiveRoutineId] = useState(null);
+
+    // New state for creating a routine
+    const [isCreatingRoutine, setIsCreatingRoutine] = useState(false);
+    const [newRoutineName, setNewRoutineName] = useState('');
 
     const { data, setData, post, reset, processing } = useForm({
         name: '',
@@ -20,6 +26,17 @@ export default function HabitTracker({ auth, routines }) {
             onSuccess: () => {
                 reset('name');
                 setActiveRoutineId(null);
+            },
+        });
+    };
+
+    const submitRoutine = (e) => {
+        e.preventDefault();
+        router.post(route('routines.store'), { name: newRoutineName }, {
+            preserveScroll: true,
+            onSuccess: () => {
+                setNewRoutineName('');
+                setIsCreatingRoutine(false);
             },
         });
     };
@@ -166,11 +183,50 @@ export default function HabitTracker({ auth, routines }) {
                         </div>
                     ))}
 
-                    {routines.length === 0 && (
-                        <div className="text-center text-gray-500 p-12 bg-white rounded-3xl shadow-sm">
-                            No routines found. Use a Seeder or add features to create them!
-                        </div>
-                    )}
+                    {/* Empty State / Create Routine Form */}
+                    <div className="bg-white rounded-3xl shadow-sm p-8 text-center border-2 border-dashed border-gray-300 mt-8">
+                        {isCreatingRoutine ? (
+                            <form onSubmit={submitRoutine} className="max-w-md mx-auto flex flex-col gap-4">
+                                <h4 className="text-xl font-bold text-gray-700">Name your new routine</h4>
+                                <input
+                                    type="text"
+                                    value={newRoutineName}
+                                    onChange={(e) => setNewRoutineName(e.target.value)}
+                                    placeholder="e.g., After School Routine"
+                                    className="rounded-xl border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200"
+                                    required
+                                    autoFocus
+                                />
+                                <div className="flex gap-3 justify-center">
+                                    <button 
+                                        type="submit" 
+                                        className="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-6 rounded-xl transition"
+                                    >
+                                        Create
+                                    </button>
+                                    <button 
+                                        type="button" 
+                                        onClick={() => setIsCreatingRoutine(false)}
+                                        className="text-gray-500 hover:text-gray-700 px-4 font-semibold transition"
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            </form>
+                        ) : (
+                            <div>
+                                {routines.length === 0 && (
+                                    <p className="text-gray-500 mb-4 text-lg">No routines found. Let's build some good habits!</p>
+                                )}
+                                <button 
+                                    onClick={() => setIsCreatingRoutine(true)}
+                                    className="bg-indigo-100 text-indigo-600 hover:bg-indigo-200 font-bold py-3 px-8 rounded-full transition transform hover:scale-105"
+                                >
+                                    + Create a Routine
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </AuthenticatedLayout>
