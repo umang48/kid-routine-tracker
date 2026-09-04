@@ -39,6 +39,22 @@ export default function HabitTracker({ auth, routines }) {
         });
     };
 
+    const deleteHabit = (habitId) => {
+        if (window.confirm('Are you sure you want to delete this habit?')) {
+            router.delete(route('habits.destroy', habitId), {
+                preserveScroll: true,
+            });
+        }
+    };
+
+    const deleteRoutine = (routineId) => {
+        if (window.confirm('Are you sure you want to delete this entire routine and all its habits?')) {
+            router.delete(route('routines.destroy', routineId), {
+                preserveScroll: true,
+            });
+        }
+    };
+
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -51,13 +67,29 @@ export default function HabitTracker({ auth, routines }) {
                     
                     {routines.map((routine) => (
                         <div key={routine.id} className="bg-white overflow-hidden shadow-xl sm:rounded-3xl p-6 border-t-8 border-indigo-400">
-                            <h3 className="text-3xl font-bold text-indigo-600 mb-6">{routine.name}</h3>
-
+                            <div className="flex justify-between items-center mb-6">
+                                <h3 className="text-3xl font-bold text-indigo-600">{routine.name}</h3>
+                                <button 
+                                    onClick={() => deleteRoutine(routine.id)}
+                                    className="text-red-400 hover:text-red-600 font-semibold text-sm transition"
+                                >
+                                    Delete Routine
+                                </button>
+                            </div>
                             <div className="space-y-4 mb-8">
                                 {routine.habits.map((habit) => (
                                     <div key={habit.id} className="flex flex-col md:flex-row md:items-center justify-between bg-indigo-50 p-4 rounded-2xl">
-                                        <div className="text-xl font-medium text-gray-700 mb-4 md:mb-0">
-                                            {habit.name}
+                                        <div className="flex items-center gap-3 mb-4 md:mb-0">
+                                            <button 
+                                                onClick={() => deleteHabit(habit.id)}
+                                                className="text-red-300 hover:text-red-500 text-lg transition"
+                                                title="Delete Habit"
+                                            >
+                                                &times; {/* This renders an 'X' character */}
+                                            </button>
+                                            <div className="text-xl font-medium text-gray-700">
+                                                {habit.name}
+                                            </div>
                                         </div>
                                         
                                         <div className="flex items-center gap-4">

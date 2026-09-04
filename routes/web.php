@@ -23,10 +23,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-// Our Habit Tracker Routes
+
+    // Our Habit Tracker Routes
     Route::get('/tracker', [HabitTrackerController::class, 'index'])->name('tracker.index');
     Route::post('/routines/{routine}/habits', [HabitTrackerController::class, 'storeHabit'])->name('habits.store');
     Route::post('/habits/{habit}/complete', [HabitTrackerController::class, 'completeHabit'])->name('habits.complete');
+    
+    // Add these two new DELETE routes
+    Route::delete('/habits/{habit}', [HabitTrackerController::class, 'destroyHabit'])->name('habits.destroy');
+    Route::delete('/routines/{routine}', [HabitTrackerController::class, 'destroyRoutine'])->name('routines.destroy');
+   
     });
 
 require __DIR__.'/auth.php';

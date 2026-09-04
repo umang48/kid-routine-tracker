@@ -51,4 +51,28 @@ class HabitTrackerController extends Controller
 
         return redirect()->back();
     }
+
+    // Delete a specific habit
+    public function destroyHabit(Habit $habit)
+    {
+        if ($habit->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $habit->delete();
+
+        return redirect()->back();
+    }
+
+    // Delete an entire routine (cascades to delete all its habits)
+    public function destroyRoutine(Routine $routine)
+    {
+        if ($routine->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $routine->delete();
+
+        return redirect()->back();
+    }
 }
